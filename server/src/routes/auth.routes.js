@@ -1,5 +1,5 @@
 import express from "express";
-import { registerUser, loginUser } from "../controllers/authController.js";
+import { registerUser, loginUser } from "../controllers/auth.controller.js";
 
 const router = express.Router();
 
@@ -25,21 +25,21 @@ const router = express.Router();
  *       properties:
  *         name:
  *           type: string
- *           example: Rohit Sharma
+ *           example: John Doe
  *         email:
  *           type: string
- *           example: rohit@gmail.com
+ *           example: john.doe@example.com
  *         phone:
  *           type: string
  *           example: "9876543210"
  *         password:
  *           type: string
- *           example: Rohit@123
+ *           example: Password123
  *         role:
  *           type: string
  *           enum: [admin, mechanic]
  *           example: mechanic
- *
+*
  *     LoginUser:
  *       type: object
  *       required:
@@ -48,10 +48,10 @@ const router = express.Router();
  *       properties:
  *         email:
  *           type: string
- *           example: rohit@gmail.com
+ *           example: john.doe@example.com
  *         password:
  *           type: string
- *           example: Rohit@123
+ *           example: Password123
  */
 
 /**

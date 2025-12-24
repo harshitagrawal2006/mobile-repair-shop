@@ -5,7 +5,7 @@ import {
   getPartsByBrandModel,
   updatePart,
   deletePart
-} from "../controllers/partController.js";
+} from "../controllers/part.controller.js";
 
 const router = express.Router();
 

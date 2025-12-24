@@ -5,7 +5,7 @@ import {
   getModelsByBrand,
   updateModelsByBrand,
   deleteBrand,
-} from "../controllers/phoneController.js";
+} from "../controllers/phone.controller.js";
 
 const router = express.Router();
 

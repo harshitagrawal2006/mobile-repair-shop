@@ -5,7 +5,9 @@ import {
   updateJobStatus,
   getAllJobCards,
   getJobCardById,
-} from "../controllers/jobCardController.js";
+} from "../controllers/jobcard.controller.js";
+import { protect, authorize } from "../middleware/auth.middleware.js";
+import { ROLES } from "../config/constants.js";
 
 const router = express.Router();
 
@@ -13,15 +15,17 @@ const router = express.Router();
  * @swagger
  * tags:
  *   name: Job Cards
- *   description: Mobile Repair Job Card APIs
+ *   description: Mobile Repair Job Card Management
  */
 
 /**
  * @swagger
- * /api/job-cards:
+ * /api/jobcards:
  *   post:
- *     summary: Create Job Card (Admin)
+ *     summary: Create Job Card (Admin only)
  *     tags: [Job Cards]
+ *     security:
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -38,65 +42,83 @@ const router = express.Router();
  *             properties:
  *               customerName:
  *                 type: string
+ *                 example: Rahul Kumar
  *               phoneNumber:
  *                 type: string
+ *                 example: "9876543210"
  *               alternateNumber:
  *                 type: string
+ *                 example: "9876543211"
  *               phoneBrand:
  *                 type: string
+ *                 example: Samsung
  *               phoneModel:
  *                 type: string
+ *                 example: Galaxy S23
  *               problemDescription:
  *                 type: string
+ *                 example: Screen broken, battery drain issue
  *               assignedMechanic:
  *                 type: string
+ *                 example: 507f1f77bcf86cd799439011
  *               status:
  *                 type: string
  *                 example: Assigned
  *     responses:
  *       201:
  *         description: Job card created successfully
+ *       400:
+ *         description: Validation error
+ *       401:
+ *         description: Unauthorized
  */
-router.post("/", createJobCard);
+router.post("/", protect, authorize(ROLES.ADMIN), createJobCard);
 
 /**
  * @swagger
- * /api/job-cards:
+ * /api/jobcards:
  *   get:
  *     summary: Get All Job Cards
  *     tags: [Job Cards]
+ *     security:
+ *       - bearerAuth: []
  *     responses:
  *       200:
- *         description: List of job cards
+ *         description: List of job cards retrieved successfully
  */
-router.get("/", getAllJobCards);
+router.get("/", protect, authorize(ROLES.ADMIN, ROLES.MECHANIC), getAllJobCards);
 
 /**
  * @swagger
- * /api/job-cards/{id}:
+ * /api/jobcards/{id}:
  *   get:
  *     summary: Get Job Card By ID
  *     tags: [Job Cards]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
  *         required: true
  *         schema:
  *           type: string
+ *         example: 507f1f77bcf86cd799439011
  *     responses:
  *       200:
- *         description: Job card data
+ *         description: Job card retrieved successfully
  *       404:
  *         description: Job card not found
  */
-router.get("/:id", getJobCardById);
+router.get("/:id", protect, authorize(ROLES.ADMIN, ROLES.MECHANIC), getJobCardById);
 
 /**
  * @swagger
- * /api/job-cards/{id}/required-parts:
+ * /api/jobcards/{id}/required-parts:
  *   put:
- *     summary: Add Required Parts (Mechanic)
+ *     summary: Add Required Parts (Mechanic/Admin)
  *     tags: [Job Cards]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -117,26 +139,32 @@ router.get("/:id", getJobCardById);
  *                   properties:
  *                     partId:
  *                       type: string
+ *                       example: 507f1f77bcf86cd799439011
  *                     name:
  *                       type: string
+ *                       example: Display
  *                     qty:
  *                       type: number
+ *                       example: 1
  *                     price:
  *                       type: number
+ *                       example: 3500
  *     responses:
  *       200:
- *         description: Required parts added
+ *         description: Required parts added successfully
  *       400:
- *         description: Stock issue
+ *         description: Stock issue or validation error
  */
-router.put("/:id/required-parts", addRequiredParts);
+router.put("/:id/required-parts", protect, authorize(ROLES.ADMIN, ROLES.MECHANIC), addRequiredParts);
 
 /**
  * @swagger
- * /api/job-cards/{id}/status:
+ * /api/jobcards/{id}/status:
  *   put:
  *     summary: Update Job Status
  *     tags: [Job Cards]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -152,11 +180,12 @@ router.put("/:id/required-parts", addRequiredParts);
  *             properties:
  *               status:
  *                 type: string
+ *                 enum: [Assigned, In Progress, Completed, Delivered]
  *                 example: Completed
  *     responses:
  *       200:
- *         description: Status updated
+ *         description: Status updated successfully
  */
-router.put("/:id/status", updateJobStatus);
+router.put("/:id/status", protect, authorize(ROLES.ADMIN, ROLES.MECHANIC), updateJobStatus);
 
 export default router;

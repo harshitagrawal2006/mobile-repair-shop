@@ -1,0 +1,47 @@
+server/
+├── src/
+│   ├── config/              # All configuration files
+│   │   ├── constants.js     # App constants (DB_NAME, etc.)
+│   │   ├── cors.config.js   # CORS configuration
+│   │   └── swagger.config.js # Swagger setup
+│   │
+│   ├── db/
+│   │   └── index.js         # Database connection
+│   │
+│   ├── models/
+│   │   ├── user.model.js
+│   │   ├── jobcard.model.js
+│   │   ├── phone.model.js
+│   │   └── part.model.js
+│   │
+│   ├── controllers/
+│   │   ├── auth.controller.js
+│   │   ├── jobcard.controller.js
+│   │   ├── phone.controller.js
+│   │   └── part.controller.js
+│   │
+│   ├── middleware/
+│   │   ├── auth.middleware.js    # JWT protect & authorize
+│   │   ├── error.middleware.js   # Global error handler
+│   │   └── validate.middleware.js # Request validation (optional)
+│   │
+│   ├── routes/
+│   │   ├── auth.routes.js
+│   │   ├── jobcard.routes.js
+│   │   ├── phone.routes.js
+│   │   └── part.routes.js
+│   │
+│   ├── utils/
+│   │   ├── ApiError.js          # Custom error class
+│   │   ├── ApiResponse.js       # Standardized response
+│   │   └── asyncHandler.js      # Async error wrapper
+│   │
+│   ├── app.js                   # Express app setup
+│   └── index.js                 # Entry point
+│
+├── .env.example                 # Example env file
+├── .env
+├── .gitignore
+├── package.json
+├── .prettierrc
+└── README.md
