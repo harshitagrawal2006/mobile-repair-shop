@@ -1,5 +1,5 @@
 import express from "express";
-import { registerUser, loginUser, getAllUsers } from "../controllers/auth.controller.js";
+import { registerUser, loginUser, getAllUsers, updateUser, deleteUser } from "../controllers/auth.controller.js";
 
 const router = express.Router();
 
@@ -109,5 +109,51 @@ router.post("/login", loginUser);
  *         description: No users found
  */
 router.get("/users", getAllUsers);
+
+/**
+ * @swagger
+ * /api/auth/users/{id}:
+ *   put:
+ *     summary: Update user
+ *     tags: [Auth]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/RegisterUser'
+ *     responses:
+ *       200:
+ *         description: User updated successfully
+ *       404:
+ *         description: User not found
+ */
+router.put("/users/:id", updateUser);
+
+/**
+ * @swagger
+ * /api/auth/users/{id}:
+ *   delete:
+ *     summary: Delete user
+ *     tags: [Auth]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: User deleted successfully
+ *       404:
+ *         description: User not found
+ */
+router.delete("/users/:id", deleteUser);
 
 export default router;

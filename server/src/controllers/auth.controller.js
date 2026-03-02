@@ -113,3 +113,68 @@ export const getAllUsers = asyncHandler(async (req, res) => {
     )
   );
 });
+
+// UPDATE USER
+export const updateUser = asyncHandler(async (req, res) => {
+
+  const { id } = req.params;
+  const { name, email, phone, password, role } = req.body;
+
+  const user = await User.findById(id);
+
+  if (!user) {
+    throw new ApiError(404, "User not found");
+  }
+
+  // Update fields
+  user.name = name || user.name;
+  user.email = email || user.email;
+  user.phone = phone || user.phone;
+  user.role = role || user.role;
+
+  // Update password if provided
+  if (password) {
+    if (password.length < 6) {
+      throw new ApiError(400, "Password must be at least 6 characters");
+    }
+
+    user.password = await bcrypt.hash(password, 10);
+  }
+
+  await user.save();
+
+  const userResponse = user.toObject();
+  delete userResponse.password;
+
+  res.status(200).json(
+    new ApiResponse(
+      200,
+      userResponse,
+      "User updated successfully"
+    )
+  );
+
+});
+
+// DELETE USER
+export const deleteUser = asyncHandler(async (req, res) => {
+
+  const { id } = req.params;
+
+  const user = await User.findById(id);
+
+  if (!user) {
+    throw new ApiError(404, "User not found");
+  }
+
+  await user.deleteOne();
+
+  res.status(200).json(
+    new ApiResponse(
+      200,
+      null,
+      "User deleted successfully"
+    )
+  );
+
+});
