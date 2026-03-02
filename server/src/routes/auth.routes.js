@@ -1,5 +1,5 @@
 import express from "express";
-import { registerUser, loginUser } from "../controllers/auth.controller.js";
+import { registerUser, loginUser, getAllUsers } from "../controllers/auth.controller.js";
 
 const router = express.Router();
 
@@ -95,5 +95,19 @@ router.post("/register", registerUser);
  *         description: User not found
  */
 router.post("/login", loginUser);
+
+/**
+ * @swagger
+ * /api/auth/users:
+ *   get:
+ *     summary: Get all users
+ *     tags: [Auth]
+ *     responses:
+ *       200:
+ *         description: All users fetched successfully
+ *       404:
+ *         description: No users found
+ */
+router.get("/users", getAllUsers);
 
 export default router;
