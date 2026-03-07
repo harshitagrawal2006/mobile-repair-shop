@@ -5,22 +5,28 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 
 // ADD BRAND + MODELS
 export const addBrand = asyncHandler(async (req, res) => {
-  const { brand, models } = req.body;
 
-  if (!brand || !models || !Array.isArray(models) || models.length === 0) {
-    throw new ApiError(400, "Brand and at least one model are required");
-  }
+const { brand, models } = req.body;
 
-  const exists = await Phone.findOne({ brand });
-  if (exists) {
-    throw new ApiError(400, "Brand already exists");
-  }
+if (!brand || !models || !Array.isArray(models) || models.length === 0) {
+  throw new ApiError(400, "Brand and at least one model are required");
+}
 
-  const saved = await Phone.create({ brand, models });
+const exists = await Phone.findOne({ brand });
 
-  res
-    .status(201)
-    .json(new ApiResponse(201, saved, "Brand added successfully"));
+if (exists) {
+  throw new ApiError(400, "Brand already exists");
+}
+
+const saved = await Phone.create({
+  brand,
+  models,
+});
+
+res
+.status(201)
+.json(new ApiResponse(201, saved, "Brand added successfully"));
+
 });
 
 // GET ALL BRANDS
@@ -49,26 +55,28 @@ export const getModelsByBrand = asyncHandler(async (req, res) => {
 
 // UPDATE MODELS OF BRAND
 export const updateModelsByBrand = asyncHandler(async (req, res) => {
-  const { brand } = req.params;
-  const { models } = req.body;
 
-  if (!models || !Array.isArray(models) || models.length === 0) {
-    throw new ApiError(400, "At least one model is required");
-  }
+const { brand } = req.params;
+const { models } = req.body;
 
-  const updated = await Phone.findOneAndUpdate(
-    { brand },
-    { models },
-    { new: true, runValidators: true }
-  );
+if (!models || !Array.isArray(models) || models.length === 0) {
+  throw new ApiError(400, "At least one model is required");
+}
 
-  if (!updated) {
-    throw new ApiError(404, "Brand not found");
-  }
+const updated = await Phone.findOneAndUpdate(
+  { brand },
+  { models },
+  { new: true, runValidators: true }
+);
 
-  res
-    .status(200)
-    .json(new ApiResponse(200, updated, "Models updated successfully"));
+if (!updated) {
+  throw new ApiError(404, "Brand not found");
+}
+
+res
+.status(200)
+.json(new ApiResponse(200, updated, "Models updated successfully"));
+
 });
 
 // DELETE BRAND
