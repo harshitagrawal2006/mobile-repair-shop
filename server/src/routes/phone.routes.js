@@ -1,25 +1,13 @@
 import express from "express";
 import {
-  addBrand,
   getAllBrands,
   getModelsByBrand,
-  updateModelsByBrand,
-  deleteBrand,
   addModel,
   updateModel,
   deleteModel
 } from "../controllers/phone.controller.js";
 
 const router = express.Router();
-
-/**
- * @swagger
- * /api/phones/add-brand:
- *   post:
- *     summary: Add new phone brand with models
- *     tags: [Phones]
- */
-router.post("/add-brand", addBrand);
 
 /**
  * @swagger
@@ -38,27 +26,6 @@ router.get("/all-brands", getAllBrands);
  *     tags: [Phones]
  */
 router.get("/models/:brand", getModelsByBrand);
-
-/**
- * @swagger
- * /api/phones/update-models/{brand}:
- *   put:
- *     summary: Update models list of a brand
- *     tags: [Phones]
- */
-router.put("/update-models/:brand", updateModelsByBrand);
-
-/**
- * @swagger
- * /api/phones/delete-brand/{brand}:
- *   delete:
- *     summary: Delete a brand
- *     tags: [Phones]
- */
-router.delete("/delete-brand/:brand", deleteBrand);
-
-
-
 
 /**
  * @swagger
@@ -86,6 +53,5 @@ router.put("/update-model/:brand/:model", updateModel);
  *     tags: [Phones]
  */
 router.delete("/delete-model/:brand/:model", deleteModel);
-
 
 export default router;
