@@ -93,3 +93,87 @@ export const deleteBrand = asyncHandler(async (req, res) => {
     .status(200)
     .json(new ApiResponse(200, null, "Brand deleted successfully"));
 });
+
+export const addModel = asyncHandler(async (req, res) => {
+
+const { brand, model, type } = req.body;
+
+if (!brand || !model || !type) {
+  throw new ApiError(400, "Brand, model and type are required");
+}
+
+let phone = await Phone.findOne({ brand });
+
+if (!phone) {
+
+  phone = await Phone.create({
+    brand,
+    models: [{ model, type }]
+  });
+
+} else {
+
+  const exists = phone.models.find(m => m.model === model);
+
+  if (exists) {
+    throw new ApiError(400, "Model already exists");
+  }
+
+  phone.models.push({ model, type });
+
+  await phone.save();
+}
+
+res
+.status(201)
+.json(new ApiResponse(201, phone, "Model added successfully"));
+
+});
+
+export const updateModel = asyncHandler(async (req, res) => {
+
+const { brand, model } = req.params;
+const { newModel, type } = req.body;
+
+const phone = await Phone.findOne({ brand });
+
+if (!phone) {
+  throw new ApiError(404, "Brand not found");
+}
+
+const modelIndex = phone.models.findIndex(m => m.model === model);
+
+if (modelIndex === -1) {
+  throw new ApiError(404, "Model not found");
+}
+
+phone.models[modelIndex].model = newModel || phone.models[modelIndex].model;
+phone.models[modelIndex].type = type || phone.models[modelIndex].type;
+
+await phone.save();
+
+res
+.status(200)
+.json(new ApiResponse(200, phone, "Model updated successfully"));
+
+});
+
+export const deleteModel = asyncHandler(async (req, res) => {
+
+const { brand, model } = req.params;
+
+const phone = await Phone.findOne({ brand });
+
+if (!phone) {
+  throw new ApiError(404, "Brand not found");
+}
+
+phone.models = phone.models.filter(m => m.model !== model);
+
+await phone.save();
+
+res
+.status(200)
+.json(new ApiResponse(200, phone, "Model deleted successfully"));
+
+});
