@@ -126,3 +126,14 @@ res
 .json(new ApiResponse(200, phone, "Model deleted successfully"));
 
 });
+
+// GET ALL BRANDS WITH MODELS
+export const getAllBrandsWithModels = asyncHandler(async (req, res) => {
+
+const brands = await Phone.find({}, { _id: 0 }).sort({ brand: 1 });
+
+res
+.status(200)
+.json(new ApiResponse(200, brands, "Brands with models retrieved successfully"));
+
+});

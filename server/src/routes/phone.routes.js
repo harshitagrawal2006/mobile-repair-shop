@@ -4,7 +4,8 @@ import {
   getModelsByBrand,
   addModel,
   updateModel,
-  deleteModel
+  deleteModel,
+  getAllBrandsWithModels
 } from "../controllers/phone.controller.js";
 
 const router = express.Router();
@@ -53,5 +54,14 @@ router.put("/update-model/:brand/:model", updateModel);
  *     tags: [Phones]
  */
 router.delete("/delete-model/:brand/:model", deleteModel);
+
+/**
+ * @swagger
+ * /api/phones/all-brands-models:
+ *   get:
+ *     summary: Get all brands with their models
+ *     tags: [Phones]
+ */
+router.get("/all-brands-models", getAllBrandsWithModels);
 
 export default router;
